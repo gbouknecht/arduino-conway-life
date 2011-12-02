@@ -28,6 +28,6 @@ of environments. It is fine when it just works for my environment:
 
 [1]: http://www.conwaylife.com/
 [2]: http://www.vim.org/
-[3]: http://www.conwaylife.com/
+[3]: http://code.google.com/p/arduino-tvout/
 [4]: http://pragprog.com/magazines/2011-08/make-your-own-video-game-system
 [5]: http://pragprog.com/magazines
