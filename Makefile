@@ -1,5 +1,8 @@
 TARGET = main_loop
 
+SRC = src
+BUILD = build
+
 ARDUINO = /Applications/Arduino.app
 ARDUINO_BIN = $(ARDUINO)/Contents/Resources/Java/hardware/tools/avr/bin
 ARDUINO_ETC = $(ARDUINO)/Contents/Resources/Java/hardware/tools/avr/etc
@@ -10,7 +13,7 @@ ARDUINO_OBJS = main.o \
                pins_arduino.o \
                cxa_pure_virtual.o
 
-VPATH = $(ARDUINO_SRC)
+VPATH = $(ARDUINO_SRC):$(SRC)
 
 CC = $(ARDUINO_BIN)/avr-gcc
 OBJCOPY = $(ARDUINO_BIN)/avr-objcopy
@@ -20,26 +23,32 @@ MCU = atmega328p
 
 CFLAGS = -Os -fno-exceptions -ffunction-sections -fdata-sections -mmcu=$(MCU) -DF_CPU=16000000L -I $(ARDUINO_SRC)
 
+.PHONY:	all
 all: upload
 
-build: $(TARGET).hex
+.PHONY:	build
+build: init $(BUILD)/$(TARGET).hex
 
-%.o: %.cpp
-	$(CC) -c $(CFLAGS) -o $@ $<
+.PHONY:	init
+init:
+	@mkdir -p $(BUILD)
 
-%.o: %.c
-	$(CC) -c $(CFLAGS) -o $@ $<
+$(BUILD)/%.o: %.cpp
+	@$(CC) -c $(CFLAGS) -o $@ $<
 
-$(TARGET).elf: $(TARGET).o $(ARDUINO_OBJS)
-	$(CC) $(CFLAGS) -o $@ $^
+$(BUILD)/%.o: %.c
+	@$(CC) -c $(CFLAGS) -o $@ $<
 
-$(TARGET).hex: $(TARGET).elf
-	$(OBJCOPY) -O ihex -R .eeprom $< $@
+$(BUILD)/$(TARGET).elf: $(addprefix $(BUILD)/,$(TARGET).o $(ARDUINO_OBJS))
+	@$(CC) $(CFLAGS) -o $@ $^
 
-upload: $(TARGET).hex
-	$(AVRDUDE) -C $(ARDUINO_ETC)/avrdude.conf -p $(MCU) -P /dev/tty.usbmodem* -c stk500v1 -b 115200 -D -U flash:w:$<:i
+$(BUILD)/$(TARGET).hex: $(BUILD)/$(TARGET).elf
+	@$(OBJCOPY) -O ihex -R .eeprom $< $@
 
+.PHONY:	upload
+upload: build
+	@$(AVRDUDE) -C $(ARDUINO_ETC)/avrdude.conf -p $(MCU) -P /dev/tty.usbmodem* -c stk500v1 -b 115200 -D -U flash:w:$(BUILD)/$(TARGET).hex:i
+
+.PHONY:	clean
 clean:
-	rm -f *.o *.elf *.hex
-
-.PHONY:	all build upload clean
+	@rm -rf $(BUILD)
