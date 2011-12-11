@@ -1,4 +1,4 @@
-TARGET = main_loop
+TARGET = life
 
 SRC = src
 BUILD = build
