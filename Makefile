@@ -3,15 +3,20 @@ TARGET = life
 SRC = src
 BUILD = build
 
+SRCS = $(wildcard $(SRC)/*.cpp)
+OBJS = $(addprefix $(BUILD)/,$(notdir $(SRCS:.cpp=.o)))
+
+DEPEND_MAKEFILE = depend
+
 ARDUINO = /Applications/Arduino.app
 ARDUINO_BIN = $(ARDUINO)/Contents/Resources/Java/hardware/tools/avr/bin
 ARDUINO_ETC = $(ARDUINO)/Contents/Resources/Java/hardware/tools/avr/etc
 ARDUINO_SRC = $(ARDUINO)/Contents/Resources/Java/hardware/arduino/cores/arduino
-ARDUINO_OBJS = main.o \
-               wiring.o \
-               wiring_digital.o \
-               pins_arduino.o \
-               cxa_pure_virtual.o
+ARDUINO_OBJS = $(addprefix $(BUILD)/,main.o \
+                                     wiring.o \
+                                     wiring_digital.o \
+                                     pins_arduino.o \
+                                     cxa_pure_virtual.o)
 
 VPATH = $(ARDUINO_SRC):$(SRC)
 
@@ -27,10 +32,15 @@ CFLAGS = -Os -fno-exceptions -ffunction-sections -fdata-sections -mmcu=$(MCU) -D
 all: upload
 
 .PHONY:	build
-build: init $(BUILD)/$(TARGET).hex
+build: $(DEPEND_MAKEFILE) createdirs $(BUILD)/$(TARGET).hex
 
-.PHONY:	init
-init:
+$(DEPEND_MAKEFILE): $(SRCS)
+	@$(CC) -MM $(CFLAGS) $^ | sed 's/\([^ ]*\)\.o[ :]*/$(BUILD)\/\1.o: /' > $@
+
+include $(DEPEND_MAKEFILE)
+
+.PHONY:	createdirs
+createdirs:
 	@mkdir -p $(BUILD)
 
 $(BUILD)/%.o: %.cpp
@@ -39,7 +49,7 @@ $(BUILD)/%.o: %.cpp
 $(BUILD)/%.o: %.c
 	@$(CC) -c $(CFLAGS) -o $@ $<
 
-$(BUILD)/$(TARGET).elf: $(addprefix $(BUILD)/,$(TARGET).o $(ARDUINO_OBJS))
+$(BUILD)/$(TARGET).elf: $(OBJS) $(ARDUINO_OBJS)
 	@$(CC) $(CFLAGS) -o $@ $^
 
 $(BUILD)/$(TARGET).hex: $(BUILD)/$(TARGET).elf
@@ -51,4 +61,4 @@ upload: build
 
 .PHONY:	clean
 clean:
-	@rm -rf $(BUILD)
+	@rm -rf $(DEPEND_MAKEFILE) $(BUILD)
