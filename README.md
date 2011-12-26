@@ -23,7 +23,7 @@ Note that it was not my intention to make the `Makefile` generic for all kinds
 of environments. It is fine when it just works for my environment:
 
 * Mac OS X Lion
-* Arduino 0023 software installed in /Applications/Arduino.app
+* Arduino 1.0 software installed in /Applications/Arduino.app
 * Arduino Uno
 
 [1]: http://www.conwaylife.com/

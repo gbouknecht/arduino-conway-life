@@ -20,21 +20,21 @@ bool Nunchuk::update() {
 
 void Nunchuk::sendHandshake() {
     Wire.beginTransmission(NUNCHUK_ADDRESS);
-    Wire.send(0x40);
-    Wire.send(0x00);
+    Wire.write((byte) 0x40);
+    Wire.write((byte) 0x00);
     Wire.endTransmission();
 }
 
 void Nunchuk::sendRequest() {
     Wire.beginTransmission(NUNCHUK_ADDRESS);
-    Wire.send(0x00);
+    Wire.write((byte) 0x00);
     Wire.endTransmission();
 }
 
 void Nunchuk::receive() {
     Wire.requestFrom(NUNCHUK_ADDRESS, NUNCHUK_DATA_SIZE);
     for (receivedBytesCount = 0; (receivedBytesCount < NUNCHUK_DATA_SIZE) && Wire.available(); receivedBytesCount++) {
-        data[receivedBytesCount] = decodeByte(Wire.receive());
+        data[receivedBytesCount] = decodeByte(Wire.read());
     }
 }
 
@@ -88,5 +88,5 @@ void Nunchuk::printHeader() {
 void Nunchuk::printLabelValue(String label, uint16_t value) {
     Serial.print("    ");
     Serial.print(label);
-    Serial.println(value, DEC);
+    Serial.println(value);
 }

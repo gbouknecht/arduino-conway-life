@@ -1,7 +1,7 @@
 #ifndef Nunchuk_h
 #define Nunchuk_h
 
-#include <WProgram.h>
+#include <Arduino.h>
 
 #define NUNCHUK_DATA_SIZE 6
 
