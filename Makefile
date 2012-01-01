@@ -26,7 +26,12 @@ ARDUINO_OBJS = $(addprefix $(BUILD)/,main.o \
                                      twi.o \
                                      cxa_pure_virtual.o)
 
-VPATH = $(ARDUINO_SRC):$(ARDUINO_VARIANT):$(ARDUINO_LIBS):$(SRC)
+EXT_LIB = libraries
+EXT_LIBS = $(addprefix $(EXT_LIB)/,TVout)
+EXT_OBJS = $(addprefix $(BUILD)/,TVout.o \
+                                 video_gen.o)
+
+VPATH = $(ARDUINO_SRC):$(ARDUINO_VARIANT):$(ARDUINO_LIBS):$(EXT_LIBS):$(SRC)
 
 CC = $(ARDUINO_BIN)/avr-gcc
 OBJCOPY = $(ARDUINO_BIN)/avr-objcopy
@@ -34,8 +39,8 @@ AVRDUDE = $(ARDUINO_BIN)/avrdude
 
 MCU = atmega328p
 
-CFLAGS = -Os -fno-exceptions -ffunction-sections -fdata-sections -mmcu=$(MCU) -DF_CPU=16000000L \
-	 $(addprefix -I,$(ARDUINO_SRC) $(ARDUINO_VARIANT) $(ARDUINO_LIBS))
+CFLAGS = -Os -Wl,--gc-sections -fno-exceptions -ffunction-sections -fdata-sections -mmcu=$(MCU) -DF_CPU=16000000L \
+	 $(addprefix -I,$(ARDUINO_SRC) $(ARDUINO_VARIANT) $(ARDUINO_LIBS) $(EXT_LIBS))
 
 .PHONY:	all
 all: upload
@@ -58,7 +63,7 @@ $(BUILD)/%.o: %.cpp
 $(BUILD)/%.o: %.c
 	$(CC) -c $(CFLAGS) -o $@ $<
 
-$(BUILD)/$(TARGET).elf: $(OBJS) $(ARDUINO_OBJS)
+$(BUILD)/$(TARGET).elf: $(OBJS) $(ARDUINO_OBJS) $(EXT_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^
 
 $(BUILD)/$(TARGET).hex: $(BUILD)/$(TARGET).elf

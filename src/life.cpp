@@ -1,17 +1,20 @@
 #include <Arduino.h>
 
 #include "Nunchuk.h"
+#include "Screen.h"
 
 Nunchuk nunchuk;
+Screen  screen;
 
 void setup() {
-    Serial.begin(9600);
     nunchuk.initialize();
+    screen.initialize();
+    screen.draw();
 }
 
 void loop() {
     if (nunchuk.update()) {
-        nunchuk.print();
+        // TODO: Implement.
     }
     delay(1000);
 }

@@ -1,5 +1,5 @@
 This is going to be an implementation of [Conway's Game of Life][1] for the
-*Arduino*.
+[Arduino][6].
 
 # Introduction
 
@@ -20,7 +20,7 @@ created a `Makefile`. Now I enter `make` from the command line and the `.hex`
 file will be built and uploaded to the Arduino.
 
 Note that it was not my intention to make the `Makefile` generic for all kinds
-of environments. It is fine when it just works for my environment:
+of environments. It is fine when it just works for me:
 
 * Mac OS X Lion
 * Arduino 1.0 software installed in /Applications/Arduino.app
@@ -31,3 +31,4 @@ of environments. It is fine when it just works for my environment:
 [3]: http://code.google.com/p/arduino-tvout/
 [4]: http://pragprog.com/magazines/2011-08/make-your-own-video-game-system
 [5]: http://pragprog.com/magazines
+[6]: http://arduino.cc/
