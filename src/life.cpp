@@ -1,20 +1,26 @@
 #include <Arduino.h>
 
 #include "Nunchuk.h"
-#include "Screen.h"
+#include "Grid.h"
 
 Nunchuk nunchuk;
-Screen  screen;
+Grid    grid;
 
 void setup() {
     nunchuk.initialize();
-    screen.initialize();
-    screen.draw();
+    grid.initialize();
+    // TODO: Remove the following lines.
+    grid.setCell(1, 3, ALIVE);
+    grid.setCell(2, 3, ALIVE);
+    grid.setCell(3, 3, ALIVE);
+    grid.setCell(3, 2, ALIVE);
+    grid.setCell(2, 1, ALIVE);
+    // TODO: END
 }
 
 void loop() {
     if (nunchuk.update()) {
         // TODO: Implement.
     }
-    delay(1000);
+    grid.createNextGeneration();
 }
