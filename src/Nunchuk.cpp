@@ -62,11 +62,11 @@ uint16_t Nunchuk::getZAcceleration() {
     return (data[4] << 2) | ((data[5] >> 6) & 0x03);
 }
 
-bool Nunchuk::isCPressed() {
+bool Nunchuk::getCState() {
     return !((data[5] >> 1) & 0x01);
 }
 
-bool Nunchuk::isZPressed() {
+bool Nunchuk::getZState() {
     return !(data[5] & 0x01);
 }
 
@@ -77,8 +77,8 @@ void Nunchuk::print() {
     printLabelValue("x acceleration: ", getXAcceleration());
     printLabelValue("y acceleration: ", getYAcceleration());
     printLabelValue("z acceleration: ", getZAcceleration());
-    printLabelValue("c pressed?      ", isCPressed());
-    printLabelValue("z pressed?      ", isZPressed());
+    printLabelValue("c state?        ", getCState());
+    printLabelValue("z state?        ", getZState());
 }
 
 void Nunchuk::printHeader() {

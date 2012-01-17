@@ -1,10 +1,14 @@
 #include <Arduino.h>
 
-#include "Nunchuk.h"
+#include "Button.h"
 #include "Grid.h"
+#include "Nunchuk.h"
 
 Nunchuk nunchuk;
+Button  zButton;
 Grid    grid;
+
+bool running;
 
 void setup() {
     nunchuk.initialize();
@@ -20,7 +24,12 @@ void setup() {
 
 void loop() {
     if (nunchuk.update()) {
-        // TODO: Implement.
+        zButton.update(nunchuk.getZState());
+        if (zButton.isPressed()) {
+            running = !running;
+        }
     }
-    grid.createNextGeneration();
+    if (running) {
+        grid.createNextGeneration();
+    }
 }

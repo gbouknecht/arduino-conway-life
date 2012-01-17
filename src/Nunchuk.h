@@ -21,7 +21,7 @@
  * 
  * void loop() {
  *     if (nunchuk.update()) {
- *         // Use Nunchuk::get... and is... methods to query updated data.
+ *         // Use Nunchuk::get... methods to query updated data.
  *     }
  *     // Introduce some delay.
  * }
@@ -44,8 +44,8 @@ public:
     uint16_t getXAcceleration();
     uint16_t getYAcceleration();
     uint16_t getZAcceleration();
-    bool     isCPressed();
-    bool     isZPressed();
+    bool     getCState();
+    bool     getZState();
 
     /**
      * Prints the data in human-readable form to the serial port.
