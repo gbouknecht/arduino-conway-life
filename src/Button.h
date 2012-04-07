@@ -31,9 +31,15 @@ public:
 
     /**
      * \return
-     *     true if and only if state of button was changed from false to true
+     *     true if and only if the button changed from up to down
      */
     bool isPressed();
+
+    /**
+     * \return
+     *     true if and only if the button is held down
+     */
+    bool isDown();
 };
 
 #endif

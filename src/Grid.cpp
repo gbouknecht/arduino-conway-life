@@ -16,8 +16,16 @@ void Grid::setCell(uint8_t x, uint8_t y, CellState cellState) {
 }
 
 void Grid::createNextGeneration() {
+    saveAndHideCursor();
     createNextGenerationIntoShadowGrid();
     copyShadowGridToScreen();
+    restoreCursor();
+}
+
+void Grid::clear() {
+    saveAndHideCursor();
+    tv.draw_rect(0, 0, GRID_WIDTH + 1, GRID_HEIGHT + 1, WHITE, BLACK);
+    restoreCursor();
 }
 
 void Grid::flipCellUnderCursor() {
@@ -55,11 +63,10 @@ void Grid::moveCursorRight() {
 }
 
 void Grid::moveCursorTo(uint8_t x, uint8_t y) {
-    bool savedCursorVisible = cursorVisible;
-    hideCursor();
+    saveAndHideCursor();
     cursorX = x;
     cursorY = y;
-    if (savedCursorVisible) showCursor();
+    restoreCursor();
 }
 
 CellState Grid::getShadowGridCell(uint8_t x, uint8_t y) {
@@ -111,6 +118,15 @@ void Grid::copyShadowGridToScreen() {
             setCell(x, y, getShadowGridCell(x, y));
         }
     }
+}
+
+void Grid::saveAndHideCursor() {
+    savedCursorVisible = cursorVisible;
+    hideCursor();
+}
+
+void Grid::restoreCursor() {
+    if (savedCursorVisible) showCursor();
 }
 
 void Grid::invertPixelsAround(uint8_t x, uint8_t y) {

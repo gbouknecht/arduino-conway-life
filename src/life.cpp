@@ -24,14 +24,17 @@ void flipRunning() {
     showOrHideCursor();
 }
 
-void processCState() {
+void processCZState() {
     cButton.update(nunchuk.getCState());
-    if (!running && cButton.isPressed()) grid.flipCellUnderCursor();
-}
-
-void processZState() {
     zButton.update(nunchuk.getZState());
-    if (zButton.isPressed()) flipRunning();
+    if (cButton.isDown() && zButton.isDown()) {
+        if (running) flipRunning();
+        grid.clear();
+    } else if (!running && cButton.isPressed()) {
+        grid.flipCellUnderCursor();
+    } else if (zButton.isPressed()) {
+        flipRunning();
+    }
 }
 
 void processUpDownLeftRightStates() {
@@ -57,8 +60,7 @@ void processUpDownLeftRightStates() {
 
 void processNunchukData() {
     processUpDownLeftRightStates();
-    processCState();
-    processZState();
+    processCZState();
 }
 
 void setup() {

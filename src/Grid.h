@@ -26,11 +26,13 @@ private:
     uint8_t cursorX;
     uint8_t cursorY;
     bool    cursorVisible;
+    bool    savedCursorVisible;
 public:
     void      initialize();
     CellState getCell(uint8_t x, uint8_t y);
     void      setCell(uint8_t x, uint8_t y, CellState cellState);
     void      createNextGeneration();
+    void      clear();
     void      flipCellUnderCursor();
     void      showCursor();
     void      hideCursor();
@@ -46,6 +48,8 @@ private:
     uint8_t   countNeighbours(uint8_t x, uint8_t y);
     CellState applyRules(CellState cellState, uint8_t numberOfNeighbours);
     void      copyShadowGridToScreen();
+    void      saveAndHideCursor();
+    void      restoreCursor();
     void      invertPixelsAround(uint8_t x, uint8_t y);
     void      invertPixel(uint8_t x, uint8_t y);
 };

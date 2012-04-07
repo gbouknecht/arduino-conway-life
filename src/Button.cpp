@@ -8,3 +8,7 @@ void Button::update(bool currentState) {
 bool Button::isPressed() {
     return !previousState && currentState;
 }
+
+bool Button::isDown() {
+    return currentState;
+}
