@@ -41,6 +41,10 @@ public:
 
     byte     getXPosition();
     byte     getYPosition();
+    bool     getUpState();
+    bool     getDownState();
+    bool     getLeftState();
+    bool     getRightState();
     uint16_t getXAcceleration();
     uint16_t getYAcceleration();
     uint16_t getZAcceleration();

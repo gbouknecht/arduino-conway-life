@@ -50,6 +50,22 @@ byte Nunchuk::getYPosition() {
     return data[1];
 }
 
+bool Nunchuk::getUpState() {
+    return getYPosition() > 160;
+}
+
+bool Nunchuk::getDownState() {
+    return getYPosition() < 96;
+}
+
+bool Nunchuk::getLeftState() {
+    return getXPosition() < 96;
+}
+
+bool Nunchuk::getRightState() {
+    return getXPosition() > 160;
+}
+
 uint16_t Nunchuk::getXAcceleration() {
     return (data[2] << 2) | ((data[5] >> 2) & 0x03);
 }

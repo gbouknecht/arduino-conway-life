@@ -3,6 +3,8 @@
 void Grid::initialize() {
     tv.begin(PAL, (GRID_WIDTH + 2 + 7) & 0xf8 /* nearest multiply of 8 */, GRID_HEIGHT + 2);
     tv.draw_rect(0, 0, GRID_WIDTH + 1, GRID_HEIGHT + 1, WHITE);
+    cursorX = GRID_WIDTH / 2;
+    cursorY = GRID_HEIGHT / 2;
 }
 
 CellState Grid::getCell(uint8_t x, uint8_t y) {
@@ -16,6 +18,48 @@ void Grid::setCell(uint8_t x, uint8_t y, CellState cellState) {
 void Grid::createNextGeneration() {
     createNextGenerationIntoShadowGrid();
     copyShadowGridToScreen();
+}
+
+void Grid::flipCellUnderCursor() {
+    setCell(cursorX, cursorY, (getCell(cursorX, cursorY) == DEAD) ? ALIVE : DEAD);
+}
+
+void Grid::showCursor() {
+    if (!cursorVisible) {
+        invertPixelsAround(cursorX + 1, cursorY + 1);
+        cursorVisible = true;
+    }
+}
+
+void Grid::hideCursor() {
+    if (cursorVisible) {
+        invertPixelsAround(cursorX + 1, cursorY + 1);
+        cursorVisible = false;
+    }
+}
+
+void Grid::moveCursorUp() {
+    moveCursorTo(cursorX, (cursorY == 0) ? GRID_HEIGHT - 1 : cursorY - 1);
+}
+
+void Grid::moveCursorDown() {
+    moveCursorTo(cursorX, (cursorY + 1) % GRID_HEIGHT);
+}
+
+void Grid::moveCursorLeft() {
+    moveCursorTo((cursorX == 0) ? GRID_WIDTH - 1 : cursorX - 1, cursorY);
+}
+
+void Grid::moveCursorRight() {
+    moveCursorTo((cursorX + 1) % GRID_WIDTH, cursorY);
+}
+
+void Grid::moveCursorTo(uint8_t x, uint8_t y) {
+    bool savedCursorVisible = cursorVisible;
+    hideCursor();
+    cursorX = x;
+    cursorY = y;
+    if (savedCursorVisible) showCursor();
 }
 
 CellState Grid::getShadowGridCell(uint8_t x, uint8_t y) {
@@ -67,4 +111,17 @@ void Grid::copyShadowGridToScreen() {
             setCell(x, y, getShadowGridCell(x, y));
         }
     }
+}
+
+void Grid::invertPixelsAround(uint8_t x, uint8_t y) {
+    for (int8_t dx = -1; dx <= 1; dx++) {
+        for (int8_t dy = -1; dy <= 1; dy++) {
+            if ((dx == 0) && (dy == 0)) continue;
+            invertPixel(x + dx, y + dy);
+        }
+    }
+}
+
+void Grid::invertPixel(uint8_t x, uint8_t y) {
+    tv.set_pixel(x, y, INVERT);
 }

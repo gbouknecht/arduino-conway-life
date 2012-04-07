@@ -23,11 +23,22 @@ class Grid {
 private:
     TVout   tv;
     uint8_t shadowGrid[((GRID_WIDTH + 7) / 8) /* 8 cells per byte */][GRID_HEIGHT];
+    uint8_t cursorX;
+    uint8_t cursorY;
+    bool    cursorVisible;
 public:
     void      initialize();
     CellState getCell(uint8_t x, uint8_t y);
     void      setCell(uint8_t x, uint8_t y, CellState cellState);
     void      createNextGeneration();
+    void      flipCellUnderCursor();
+    void      showCursor();
+    void      hideCursor();
+    void      moveCursorUp();
+    void      moveCursorDown();
+    void      moveCursorLeft();
+    void      moveCursorRight();
+    void      moveCursorTo(uint8_t x, uint8_t y);
 private:
     CellState getShadowGridCell(uint8_t x, uint8_t y);
     void      setShadowGridCell(uint8_t x, uint8_t y, CellState cellState);
@@ -35,6 +46,8 @@ private:
     uint8_t   countNeighbours(uint8_t x, uint8_t y);
     CellState applyRules(CellState cellState, uint8_t numberOfNeighbours);
     void      copyShadowGridToScreen();
+    void      invertPixelsAround(uint8_t x, uint8_t y);
+    void      invertPixel(uint8_t x, uint8_t y);
 };
 
 #endif
