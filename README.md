@@ -11,7 +11,9 @@ found in the August 2011 issue of the [PragPub magazines][5].
 
 # How everything is wired together
 
-The following picture shows how everything is wired together: ![][7]
+The following picture shows how everything is wired together:
+
+![][7]
 
 # Makefile
 
